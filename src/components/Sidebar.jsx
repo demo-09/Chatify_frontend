@@ -100,7 +100,7 @@ const Sidebar = () => {
 
       {/* Header */}
       <div className="p-4 border-b border-app">
-        <div className="hidden lg:flex items-center justify-between mb-4">
+        <div className="flex md:hidden lg:flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Users className="w-4 h-4 text-accent" />
             <span className="font-semibold text-sm text-main">Messages</span>
@@ -111,8 +111,8 @@ const Sidebar = () => {
           </div>
         </div>
 
-        {/* Search bar - visible on all */}
-        <div className="relative mb-3">
+        {/* Search bar - visible on mobile and desktop */}
+        <div className="relative mb-3 flex md:hidden lg:flex">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted pointer-events-none" />
           <input
             type="text"
@@ -123,8 +123,8 @@ const Sidebar = () => {
           />
         </div>
 
-        {/* Toggle */}
-        <div className="flex items-center gap-2">
+        {/* Toggle - visible on mobile and desktop */}
+        <div className="flex md:hidden lg:flex items-center gap-2">
           <button
             onClick={() => setShowOnlineOnly(!showOnlineOnly)}
             className={`relative w-8 h-4 rounded-full transition-colors ${showOnlineOnly ? "bg-accent" : "bg-white/10"}`}
@@ -168,7 +168,7 @@ const Sidebar = () => {
                     <Users className="w-5 h-5 text-accent" />
                   )}
                 </div>
-                <div className="hidden lg:block flex-1 min-w-0">
+                <div className="flex md:hidden lg:flex flex-col flex-1 min-w-0">
                   <span className="text-sm font-semibold text-main truncate block">{group.name}</span>
                   <span className="text-[10px] text-muted truncate block">{group.members.length} members</span>
                 </div>
@@ -178,7 +178,7 @@ const Sidebar = () => {
         </div>
 
         {/* Direct Messages Section */}
-        <div className="px-4 py-3 text-muted">
+        <div className="px-4 py-3 text-muted flex md:hidden lg:flex">
           <span className="text-[11px] font-bold uppercase tracking-wider">Direct Messages</span>
         </div>
 
@@ -214,8 +214,8 @@ const Sidebar = () => {
                 )}
               </div>
 
-              {/* Info - only on large */}
-              <div className="hidden lg:flex flex-col flex-1 min-w-0">
+              {/* Info - visible on mobile and large desktop */}
+              <div className="flex md:hidden lg:flex flex-col flex-1 min-w-0">
                 <div className="flex items-center justify-between mb-0.5">
                   <span className={`text-sm font-semibold truncate ${isSelected ? "text-main" : "text-main/80"}`}>
                     {user.fullName}

@@ -3,6 +3,8 @@ import { useAuthStore } from "../../store/useAuthStore";
 import { useThemeStore } from "../../store/useThemeStore";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useSocialStore } from "../../store/useSocialStore";
+import { useChatStore } from "../../store/useChatStore";
 
 const NOTIFICATIONS = [
   { id: 1, type: "message", text: "Alex sent you a message", time: "2m ago", unread: true },
@@ -11,9 +13,11 @@ const NOTIFICATIONS = [
   { id: 4, type: "system", text: "Server health is 99.9%", time: "3h ago", unread: false },
 ];
 
-const Navbar = () => {
+const Navbar = ({ onMenuClick }) => {
   const { authUser } = useAuthStore();
   const { theme, setTheme } = useThemeStore();
+  const { isSidebarVisible, toggleSidebar } = useSocialStore();
+  const { selectedUser } = useChatStore();
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState(NOTIFICATIONS);
   const unreadCount = notifications.filter(n => n.unread).length;
@@ -22,9 +26,40 @@ const Navbar = () => {
 
   return (
     <header className="h-16 lg:h-20 bg-surface/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between px-4 sm:px-6 z-20 sticky top-0 flex-shrink-0 transition-all">
+      <div className="flex items-center gap-3">
+        {/* Hamburger Menu (Mobile) */}
+        <button
+          onClick={onMenuClick}
+          className="p-2 lg:hidden rounded-xl text-muted hover:text-main hover:bg-white/5 transition-all"
+        >
+          <Menu className="w-6 h-6" />
+        </button>
+
+        {/* Logo/Title (Mobile) */}
+        <div className="lg:hidden flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-gradient-main flex items-center justify-center">
+            <MessageSquare className="w-4 h-4 text-white" />
+          </div>
+          <span className="font-display font-bold text-lg text-white tracking-tight">ChatiFy</span>
+        </div>
+      </div>
 
       {/* Right Actions */}
       <div className="flex items-center gap-2 ml-4 relative">
+        {/* Social Toggle (Desktop) */}
+        {!selectedUser && (
+          <button
+            onClick={toggleSidebar}
+            className={`hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all
+              ${isSidebarVisible
+                ? "bg-accent/10 border-accent/30 text-accent"
+                : "bg-surface border-white/6 text-muted hover:border-white/20 hover:text-main"}
+            `}
+          >
+            <Zap className={`w-4 h-4 ${isSidebarVisible ? "fill-accent" : ""}`} />
+            <span className="text-[10px] font-bold uppercase tracking-wider">Social</span>
+          </button>
+        )}
 
         {/* User Profile */}
         <Link

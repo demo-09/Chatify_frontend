@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, MessageSquare, Camera, CircleDashed, Settings, Users } from "lucide-react";
+import { LayoutDashboard, MessageSquare, Camera, CircleDashed, Settings, Users, Phone, Bot } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthStore";
 
 const BottomNav = () => {
@@ -10,6 +10,8 @@ const BottomNav = () => {
     { to: "/chats", icon: MessageSquare, label: "Chats" },
     { to: "/snaps", icon: Camera, label: "Snaps" },
     { to: "/stories", icon: CircleDashed, label: "Stories" },
+    { to: "/calls", icon: Phone, label: "Calls" },
+    { to: "/ai-tools", icon: Bot, label: "AI" },
     { to: "/settings", icon: Settings, label: "Settings" },
   ];
 

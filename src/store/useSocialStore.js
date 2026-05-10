@@ -2,6 +2,7 @@ import { create } from "zustand";
 
 export const useSocialStore = create((set) => ({
   isSidebarOpen: false,
+  isSidebarVisible: false, // Desktop manual toggle
   activeView: null, // "camera", "snap", "story"
   selectedContent: null, // The actual snap or story object
 
@@ -16,4 +17,6 @@ export const useSocialStore = create((set) => ({
     activeView: null, 
     selectedContent: null 
   }),
+
+  toggleSidebar: () => set((state) => ({ isSidebarVisible: !state.isSidebarVisible })),
 }));

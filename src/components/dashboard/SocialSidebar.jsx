@@ -12,7 +12,7 @@ const SocialSidebar = () => {
   const { stories, fetchStories, uploadStory } = useStoryStore();
   const { snaps, fetchSnaps, openSnap, sendSnap, isSending } = useSnapStore();
   const { users, getUsers, selectedUser } = useChatStore();
-  const { activeView, selectedContent, closeSidebar } = useSocialStore();
+  const { activeView, selectedContent, closeSidebar, isSidebarVisible } = useSocialStore();
 
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
@@ -98,7 +98,7 @@ const SocialSidebar = () => {
 
   return (
     <aside className={`
-      ${(activeView || isCameraActive) ? "fixed inset-0 z-[120] bg-[#0d0e14]/98 backdrop-blur-2xl flex" : selectedUser ? "hidden" : "hidden xl:flex w-[340px] border-l border-white/5"}
+      ${(activeView || isCameraActive) ? "fixed inset-0 z-[120] bg-[#0d0e14]/98 backdrop-blur-2xl flex" : (selectedUser || !isSidebarVisible) ? "hidden" : "hidden xl:flex w-[340px] border-l border-white/5"}
       flex-col transition-all duration-500 ease-in-out shadow-2xl overflow-hidden
     `}>
       {/* Mobile Backdrop - only for desktop side-panel mode if we wanted it, but let's focus on the viewer */}
