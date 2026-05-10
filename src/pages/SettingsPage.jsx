@@ -82,14 +82,14 @@ const SettingsPage = () => {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar nav - Horizontal scroll on mobile */}
-          <div className="lg:w-64 flex-shrink-0">
-            <div className="glass rounded-2xl p-2.5 flex lg:flex-col gap-1.5 overflow-x-auto no-scrollbar border border-white/5 bg-surface/30 sticky top-24">
+          {/* Sidebar nav - Now vertical on all screens */}
+          <div className="w-full lg:w-64 flex-shrink-0">
+            <div className="glass rounded-2xl p-2 flex flex-col gap-1 border border-white/5 bg-surface/30 lg:sticky lg:top-24 shadow-sm">
               {sections.map(({ id, label, icon: Icon }) => (
                 <button
                   key={id}
                   onClick={() => setActiveSection(id)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all flex-shrink-0 lg:w-full text-left group ${
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all group ${
                     activeSection === id 
                     ? "bg-accent text-white shadow-glow" 
                     : "text-muted hover:bg-white/5 hover:text-main"
@@ -97,7 +97,7 @@ const SettingsPage = () => {
                 >
                   <Icon className={`w-4 h-4 ${activeSection === id ? "text-white" : "text-accent"}`} />
                   <span className="flex-1">{label}</span>
-                  <ChevronRight className={`w-3.5 h-3.5 ml-auto hidden lg:block opacity-0 group-hover:opacity-40 transition-opacity ${activeSection === id ? "opacity-100" : ""}`} />
+                  <ChevronRight className={`w-3.5 h-3.5 ml-auto opacity-0 group-hover:opacity-40 transition-opacity ${activeSection === id ? "opacity-100" : ""}`} />
                 </button>
               ))}
             </div>

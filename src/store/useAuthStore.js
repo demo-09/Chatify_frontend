@@ -3,7 +3,7 @@ import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 
-const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+const BASE_URL = import.meta.env.VITE_BACKEND_URL || "https://chatify-backend-shes.onrender.com";
 
 export const useAuthStore = create((set, get) => ({
     authUser: null,
@@ -160,13 +160,13 @@ export const useAuthStore = create((set, get) => ({
 
         if (socket?.connected) return;
 
-        const newSocket = io(BASE_URL, {
-            query: {
-                userId: authUser._id,
-            },
-            withCredentials: true,
-            transports: ["websocket"],
-        });
+    const newSocket = io(BASE_URL, {
+      query: {
+        userId: authUser?._id,
+      },
+      withCredentials: true,
+      transports: ["websocket"],
+    });
 
         newSocket.connect();
 

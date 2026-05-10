@@ -26,7 +26,7 @@ export const useAdminStore = create((set, get) => ({
     set({ isLoadingUsers: true });
     try {
       const res = await axiosInstance.get("/admin/users");
-      set({ users: res.data });
+      set({ users: Array.isArray(res.data) ? res.data : [] });
     } catch (error) {
       console.error("Error fetching admin users:", error);
       toast.error(error?.response?.data?.message || "Failed to fetch users");

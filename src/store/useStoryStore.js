@@ -11,7 +11,7 @@ export const useStoryStore = create((set, get) => ({
     set({ isLoading: true });
     try {
       const res = await axiosInstance.get("/stories");
-      set({ stories: res.data });
+      set({ stories: Array.isArray(res.data) ? res.data : [] });
     } catch (error) {
       console.error("Error fetching stories:", error);
       toast.error(error?.response?.data?.message || "Failed to fetch stories");
