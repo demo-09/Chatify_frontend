@@ -11,7 +11,7 @@ const NOTIFICATIONS = [
   { id: 4, type: "system", text: "Server health is 99.9%", time: "3h ago", unread: false },
 ];
 
-const Navbar = ({ onMenuClick }) => {
+const Navbar = () => {
   const { authUser } = useAuthStore();
   const { theme, setTheme } = useThemeStore();
   const [showNotifications, setShowNotifications] = useState(false);
@@ -21,15 +21,7 @@ const Navbar = ({ onMenuClick }) => {
   const markAllRead = () => setNotifications(prev => prev.map(n => ({ ...n, unread: false })));
 
   return (
-    <header className="h-20 bg-surface/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between px-4 sm:px-6 z-20 sticky top-0 flex-shrink-0">
-      
-      {/* Mobile Menu Toggle */}
-      <button 
-        onClick={onMenuClick}
-        className="lg:hidden p-2 rounded-xl bg-white/5 text-muted hover:text-white transition-all mr-2"
-      >
-        <Menu className="w-6 h-6" />
-      </button>
+    <header className="h-16 lg:h-20 bg-surface/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between px-4 sm:px-6 z-20 sticky top-0 flex-shrink-0 transition-all">
 
       {/* Right Actions */}
       <div className="flex items-center gap-2 ml-4 relative">

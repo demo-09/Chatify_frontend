@@ -16,7 +16,7 @@ const navItems = [
   { to: "/users", icon: Users, label: "Users" },
 ];
 
-const Sidebar = ({ isOpen, onClose }) => {
+const Sidebar = () => {
   const { logout, authUser } = useAuthStore();
 
   const filteredNavItems = navItems.filter(item => {
@@ -27,18 +27,7 @@ const Sidebar = ({ isOpen, onClose }) => {
   });
 
   return (
-    <aside className={`
-      fixed inset-y-0 left-0 z-[110] w-[280px] bg-[#0d0e14] border-r border-white/5 flex flex-col transition-all duration-300 ease-in-out
-      lg:static lg:translate-x-0
-      ${isOpen ? "translate-x-0 shadow-2xl shadow-black/50" : "-translate-x-full lg:translate-x-0"}
-    `}>
-      {/* Mobile Close Button */}
-      <button 
-        onClick={onClose}
-        className="lg:hidden absolute right-4 top-6 p-2 rounded-xl bg-white/5 text-muted hover:text-white"
-      >
-        <X className="w-5 h-5" />
-      </button>
+    <aside className="w-[280px] h-full bg-[#0d0e14] border-r border-white/5 flex flex-col flex-shrink-0 transition-all duration-300">
       {/* Logo Area */}
       <div className="h-20 flex items-center px-4 lg:px-6 border-b border-white/5 flex-shrink-0">
         <div className="flex items-center gap-3">
