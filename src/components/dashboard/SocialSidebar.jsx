@@ -97,7 +97,11 @@ const SocialSidebar = () => {
   const filteredUsers = users.filter(u => u.fullName.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
-    <aside className="hidden xl:flex w-85 flex-col bg-surface border-l border-app animate-fade-in relative z-50 overflow-hidden shadow-2xl">
+    <aside className={`
+      ${(activeView || isCameraActive) ? "fixed inset-0 z-[120] bg-[#0d0e14]/98 backdrop-blur-2xl flex" : "hidden xl:flex w-[340px] border-l border-white/5"}
+      flex-col transition-all duration-500 ease-in-out shadow-2xl overflow-hidden
+    `}>
+      {/* Mobile Backdrop - only for desktop side-panel mode if we wanted it, but let's focus on the viewer */}
       {/* Header with Close Button */}
       <div className="p-4 border-b border-app flex items-center justify-between bg-card/30">
         <h2 className="text-xs font-black uppercase tracking-widest text-main">Social Panel</h2>
@@ -110,17 +114,48 @@ const SocialSidebar = () => {
         
         {/* Dynamic Viewer Section */}
         {activeView === "snap" && selectedContent ? (
-          <section className="animate-scale-in">
-             <div className="flex items-center justify-between mb-4">
-               <h3 className="text-[11px] font-black uppercase tracking-widest text-rose-500">Viewing Snap</h3>
-               <div className="flex items-center gap-2 px-3 py-1 bg-rose-500/10 rounded-full">
-                  <Clock className="w-3 h-3 text-rose-500" />
-                  <span className="text-xs font-bold text-rose-500">{viewTimer}s</span>
+          <section className="animate-scale-in flex-1 flex flex-col items-center justify-center relative">
+             <div className="absolute top-0 inset-x-0 p-6 flex items-center justify-between z-10">
+               <h3 className="text-[11px] font-black uppercase tracking-widest text-white drop-shadow-md">Viewing Snap</h3>
+               <div className="flex items-center gap-2 px-3 py-1 bg-white/10 backdrop-blur-md rounded-full border border-white/20">
+                  <Clock className="w-3 h-3 text-white" />
+                  <span className="text-xs font-bold text-white">{viewTimer}s</span>
                </div>
              </div>
-             <div className="relative aspect-[9/16] rounded-3xl overflow-hidden border-2 border-rose-500/20 shadow-glow shadow-rose-500/10">
+             <div className="w-full h-full sm:aspect-[9/16] sm:h-auto sm:max-h-[85vh] sm:rounded-3xl overflow-hidden shadow-2xl relative">
                 <img src={selectedContent} className="w-full h-full object-cover" alt="Snap" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 pointer-events-none" />
+             </div>
+             <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/40 text-[10px] font-bold uppercase tracking-widest animate-pulse">
+               Disappearing Moment
+             </div>
+          </section>
+        ) : activeView === "story" && selectedContent ? (
+          <section className="animate-scale-in flex-1 flex flex-col items-center justify-center relative">
+             <div className="absolute top-0 inset-x-0 p-4 z-20 flex gap-1.5">
+                <div className="flex-1 h-1 bg-white/20 rounded-full overflow-hidden">
+                  <div className="h-full bg-white transition-all duration-75 ease-linear" style={{ width: `100%` }} />
+                </div>
+             </div>
+             <div className="absolute top-8 inset-x-0 p-4 z-20 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                   <div className="p-0.5 rounded-full bg-gradient-main">
+                      <img src="/avatar.png" alt="" className="w-9 h-9 rounded-full border-2 border-surface bg-surface" />
+                   </div>
+                   <div>
+                      <div className="text-white text-sm font-bold">Story View</div>
+                      <div className="text-white/60 text-[10px] font-bold uppercase tracking-widest">Active Now</div>
+                   </div>
+                </div>
+                <button onClick={closeSidebar} className="p-2 text-white/80 hover:text-white transition-all hover:scale-110"><X className="w-6 h-6" /></button>
+             </div>
+             <div className="w-full h-full sm:aspect-[9/16] sm:h-auto sm:max-h-[85vh] sm:rounded-3xl overflow-hidden shadow-2xl relative">
+                <img src={selectedContent} className="w-full h-full object-cover" alt="Story" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 pointer-events-none" />
+             </div>
+             <div className="absolute bottom-6 inset-x-6 z-20 flex items-center gap-3">
+                <input type="text" placeholder="Reply to story..." className="flex-1 bg-white/10 border border-white/20 rounded-full py-3 px-5 text-white placeholder:text-white/60 text-sm backdrop-blur-xl outline-none" />
+                <button className="w-11 h-11 rounded-full flex items-center justify-center bg-accent shadow-glow text-white"><Send className="w-5 h-5" /></button>
              </div>
           </section>
         ) : (
@@ -135,14 +170,17 @@ const SocialSidebar = () => {
                 {!isCameraActive ? (
                   <div onClick={startCamera} className="absolute inset-0 flex flex-col items-center justify-center gap-3 cursor-pointer hover:bg-white/5 transition-all">
                     <div className="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center text-accent group-hover:scale-110 transition-transform"><Camera className="w-6 h-6" /></div>
-                    <span className="text-xs font-bold text-main">Tap to Start</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-main">Launch Lens</span>
                   </div>
                 ) : (
                   <div className="w-full h-full relative">
                     {!capturedImage ? (
                       <>
                         <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover scale-x-[-1]" />
-                        <button onClick={takePhoto} className="absolute bottom-4 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full border-2 border-white flex items-center justify-center"><div className="w-9 h-9 rounded-full bg-white active:scale-90 transition-transform" /></button>
+                        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/40 pointer-events-none" />
+                        <button onClick={takePhoto} className="absolute bottom-6 left-1/2 -translate-x-1/2 w-16 h-16 rounded-full border-4 border-white flex items-center justify-center shadow-glow">
+                          <div className="w-12 h-12 rounded-full bg-white active:scale-90 transition-transform shadow-inner" />
+                        </button>
                       </>
                     ) : (
                       <div className="absolute inset-0 bg-black flex flex-col">

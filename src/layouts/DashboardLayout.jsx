@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "../components/dashboard/Sidebar";
 import Navbar from "../components/dashboard/Navbar";
 import BottomNav from "../components/dashboard/BottomNav";
+import SocialSidebar from "../components/dashboard/SocialSidebar";
 import { useState } from "react";
 
 const DashboardLayout = () => {
@@ -9,6 +10,7 @@ const DashboardLayout = () => {
 
   return (
     <div className="h-screen flex flex-col lg:flex-row bg-appbg overflow-hidden relative">
+      <SocialSidebar />
       {/* Desktop Sidebar */}
       <div className="hidden lg:block">
         <Sidebar />

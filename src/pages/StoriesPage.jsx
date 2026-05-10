@@ -2,11 +2,13 @@ import { useState, useEffect, useRef } from "react";
 import { Plus, Eye, MoreHorizontal, Heart, Send, Loader2 } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useStoryStore } from "../store/useStoryStore";
+import { useSocialStore } from "../store/useSocialStore";
 import toast from "react-hot-toast";
 
 const StoriesPage = () => {
   const { authUser } = useAuthStore();
   const { stories, fetchStories, uploadStory, isUploading, isLoading, viewStory } = useStoryStore();
+  const { openSidebar } = useSocialStore();
   const [activeStory, setActiveStory] = useState(null);
   const [isViewing, setIsViewing] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -58,8 +60,7 @@ const StoriesPage = () => {
 
   const openStory = async (story) => {
     if (!story) return;
-    setActiveStory(story);
-    setIsViewing(true);
+    openSidebar("story", story.mediaUrl);
     if (!story.views?.includes(authUser?._id)) {
       await viewStory(story._id);
     }
@@ -131,58 +132,7 @@ const StoriesPage = () => {
         )}
       </div>
 
-      {/* Active Story Viewer */}
-      {isViewing && activeStory && (
-        <div className="fixed inset-0 z-50 bg-black/98 flex items-center justify-center backdrop-blur-md">
-          <div className="relative w-full max-w-md h-[100dvh] sm:h-[85dvh] sm:rounded-3xl overflow-hidden bg-surface shadow-2xl flex flex-col animate-scale-in">
-            
-            {/* Story Progress Bars */}
-            <div className="absolute top-0 inset-x-0 p-4 z-20 flex gap-1.5">
-              <div className="flex-1 h-1 bg-white/20 rounded-full overflow-hidden">
-                <div className="h-full bg-white transition-all duration-75 ease-linear" style={{ width: `${progress}%` }} />
-              </div>
-            </div>
-
-            {/* Story Header */}
-            <div className="absolute top-4 inset-x-0 p-4 z-20 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="p-0.5 rounded-full bg-gradient-main">
-                  <img src={activeStory.user?.profilePic || "/avatar.png"} alt="" className="w-9 h-9 rounded-full border-2 border-surface bg-surface" />
-                </div>
-                <div className="drop-shadow-lg">
-                  <div className="text-white text-sm font-bold">{activeStory.user?.fullName}</div>
-                  <div className="text-white/80 text-[10px] font-bold uppercase tracking-widest">
-                    {new Date(activeStory.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <button className="p-2 text-white/80 hover:text-white transition-colors"><MoreHorizontal className="w-5 h-5" /></button>
-                <button onClick={() => { setIsViewing(false); setActiveStory(null); }} className="p-2 text-white/80 hover:text-white transition-all hover:scale-110"><Plus className="w-6 h-6 rotate-45" /></button>
-              </div>
-            </div>
-
-            {/* Story Image */}
-            <div className="flex-1 relative bg-black/40 flex items-center justify-center">
-              <img src={activeStory.mediaUrl} alt="Story" className="w-full h-full object-contain sm:object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60 pointer-events-none" />
-            </div>
-
-            {/* Story Footer */}
-            <div className="absolute bottom-0 inset-x-0 p-5 z-20 flex items-center gap-3">
-              <div className="flex-1 relative">
-                <input type="text" placeholder="Send a reply..." className="w-full bg-white/10 border border-white/20 rounded-full py-3 px-5 text-white placeholder:text-white/60 text-sm backdrop-blur-xl outline-none focus:border-white/40 transition-all focus:bg-white/20" />
-              </div>
-              <button className="w-11 h-11 rounded-full flex items-center justify-center bg-white/10 hover:bg-rose-500 transition-all group backdrop-blur-xl">
-                <Heart className="w-6 h-6 text-white group-hover:scale-110" />
-              </button>
-              <button className="w-11 h-11 rounded-full flex items-center justify-center bg-accent shadow-glow transition-all hover:scale-105 active:scale-95">
-                <Send className="w-5 h-5 text-white" />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Removed Internal Viewer - Now using Global SocialSidebar via openSidebar */}
 
       {/* Recent Stories Grid */}
       <div className="mt-4">

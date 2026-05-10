@@ -60,7 +60,7 @@ const SnapsPage = () => {
   const displaySnaps = activeTab === "received" ? receivedSnaps : sentSnaps;
 
   return (
-    <div className="h-full flex flex-col p-4 sm:p-6 lg:p-8 relative z-10 animate-fade-in">
+    <div className="flex flex-col p-4 sm:p-6 lg:p-8 relative z-10 animate-fade-in min-h-[calc(100vh-80px)]">
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-display font-bold text-main tracking-tight mb-1">Snaps</h1>
@@ -155,14 +155,24 @@ const SnapsPage = () => {
               {safeUsers.map(user => (
                 <div 
                   key={user._id} 
-                  onClick={() => { setSelectedReceiver(user); setTimeout(() => fileRef.current?.click(), 100); }}
-                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-card cursor-pointer transition-all group"
+                  onClick={() => setSelectedReceiver(user)}
+                  className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all group ${selectedReceiver?._id === user._id ? "bg-accent/15 border border-accent/20" : "hover:bg-card border border-transparent"}`}
                 >
                   <img src={user.profilePic || "/avatar.png"} alt="" className="w-10 h-10 rounded-full border-2 border-transparent group-hover:border-accent/50 transition-all" />
-                  <span className="text-sm font-medium text-main">{user.fullName}</span>
+                  <span className={`text-sm font-medium ${selectedReceiver?._id === user._id ? "text-accent" : "text-main"}`}>{user.fullName}</span>
                 </div>
               ))}
             </div>
+            {selectedReceiver && !isSending && (
+              <div className="p-4 border-t border-app">
+                <button 
+                  onClick={() => fileRef.current?.click()}
+                  className="w-full py-3 bg-gradient-main rounded-xl text-white font-bold text-sm shadow-glow flex items-center justify-center gap-2"
+                >
+                  <ImageIcon className="w-4 h-4" /> Select Media
+                </button>
+              </div>
+            )}
             {isSending && (
               <div className="p-4 flex items-center justify-center gap-2 text-accent text-sm font-medium border-t border-app">
                 <Loader2 className="w-4 h-4 animate-spin" /> Sending Snap...
