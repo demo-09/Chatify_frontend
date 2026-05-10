@@ -111,8 +111,8 @@ const Sidebar = () => {
           </div>
         </div>
 
-        {/* Search bar - only visible on large */}
-        <div className="hidden lg:block relative mb-3">
+        {/* Search bar - visible on all */}
+        <div className="relative mb-3">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted pointer-events-none" />
           <input
             type="text"
@@ -124,7 +124,7 @@ const Sidebar = () => {
         </div>
 
         {/* Toggle */}
-        <div className="hidden lg:flex items-center gap-2">
+        <div className="flex items-center gap-2">
           <button
             onClick={() => setShowOnlineOnly(!showOnlineOnly)}
             className={`relative w-8 h-4 rounded-full transition-colors ${showOnlineOnly ? "bg-accent" : "bg-white/10"}`}
