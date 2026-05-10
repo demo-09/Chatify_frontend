@@ -5,10 +5,12 @@ import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || "658794240059-90qmvnr8as20jt9hsd3gc1u5apb1j3jt.apps.googleusercontent.com";
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter>
-      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
         <App />
       </GoogleOAuthProvider>
     </BrowserRouter>
