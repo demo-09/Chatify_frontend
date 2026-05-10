@@ -22,13 +22,16 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
-  getMessages: async (userId) => {
+  getMessages: async (id) => {
     set({ isMessagesLoading: true });
     try {
-      const res = await axiosInstance.get(`/messages/${userId}`);
+      const { selectedUser } = get();
+      const isGroup = !!selectedUser?.members;
+      const endpoint = isGroup ? `/messages/group/${id}` : `/messages/${id}`;
+      const res = await axiosInstance.get(endpoint);
       set({ messages: res.data });
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Failed to load messages");
     } finally {
       set({ isMessagesLoading: false });
     }
@@ -36,10 +39,12 @@ export const useChatStore = create((set, get) => ({
   sendMessage: async (messageData) => {
     const { selectedUser, messages } = get();
     try {
-      const res = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
+      const isGroup = !!selectedUser?.members;
+      const endpoint = isGroup ? `/messages/send-group/${selectedUser._id}` : `/messages/send/${selectedUser._id}`;
+      const res = await axiosInstance.post(endpoint, messageData);
       set({ messages: [...messages, res.data] });
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Failed to send message");
     }
   },
 
@@ -48,10 +53,17 @@ export const useChatStore = create((set, get) => ({
     if (!selectedUser) return;
 
     const socket = useAuthStore.getState().socket;
+    const isGroup = !!selectedUser.members;
 
     socket.on("newMessage", (newMessage) => {
-      const isMessageSentFromSelectedUser = newMessage.senderId === selectedUser._id;
-      if (!isMessageSentFromSelectedUser) return;
+      let isRelevant = false;
+      if (isGroup) {
+        isRelevant = newMessage.groupId === selectedUser._id;
+      } else {
+        isRelevant = newMessage.senderId === selectedUser._id;
+      }
+
+      if (!isRelevant) return;
 
       set({
         messages: [...get().messages, newMessage],
@@ -65,4 +77,9 @@ export const useChatStore = create((set, get) => ({
   },
 
   setSelectedUser: (selectedUser) => set({ selectedUser }),
+
+  isCameraMode: false,
+  setCameraMode: (isCameraMode) => set({ isCameraMode }),
+  draftImage: null,
+  setDraftImage: (draftImage) => set({ draftImage }),
 }));

@@ -3,10 +3,7 @@ import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 
-const BASE_URL =
-    import.meta.env.MODE === "development"
-        ? "http://localhost:5001"
-        : "https://chatify-backend-shes.onrender.com";
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 export const useAuthStore = create((set, get) => ({
     authUser: null,
@@ -14,6 +11,7 @@ export const useAuthStore = create((set, get) => ({
     isLoggingIn: false,
     isUpdatingProfile: false,
     isCheckingAuth: true,
+    isVerifyingOtp: false,
     onlineUsers: [],
     socket: null,
 
@@ -35,19 +33,13 @@ export const useAuthStore = create((set, get) => ({
 
     signup: async (data) => {
         set({ isSigningUp: true });
-
         try {
             const res = await axiosInstance.post("/auth/signup", data);
-
-            set({ authUser: res.data });
-
-            toast.success("Account created successfully");
-
-            get().connectSocket();
+            toast.success(res.data.message || "OTP sent to your email");
+            return { success: true, email: data.email };
         } catch (error) {
-            toast.error(
-                error?.response?.data?.message || "Signup failed"
-            );
+            toast.error(error?.response?.data?.message || "Signup failed");
+            return { success: false };
         } finally {
             set({ isSigningUp: false });
         }
@@ -55,23 +47,66 @@ export const useAuthStore = create((set, get) => ({
 
     login: async (data) => {
         set({ isLoggingIn: true });
-
         try {
             const res = await axiosInstance.post("/auth/login", data);
-
-            set({ authUser: res.data });
-
-            toast.success("Logged in successfully");
-
-            get().connectSocket();
+            toast.success(res.data.message || "OTP sent to your email");
+            return { success: true, email: data.email };
         } catch (error) {
             console.log("Login error:", error);
-
-            toast.error(
-                error?.response?.data?.message || "Login failed"
-            );
+            toast.error(error?.response?.data?.message || "Login failed");
+            return { success: false };
         } finally {
             set({ isLoggingIn: false });
+        }
+    },
+
+    googleLogin: async (token) => {
+        set({ isLoggingIn: true });
+        try {
+            const res = await axiosInstance.post("/auth/google-login", { token });
+            set({ authUser: res.data });
+            toast.success("Logged in with Google");
+            get().connectSocket();
+        } catch (error) {
+            toast.error(error?.response?.data?.message || "Google Login failed");
+        } finally {
+            set({ isLoggingIn: false });
+        }
+    },
+
+    sendOtp: async (email) => {
+        try {
+            await axiosInstance.post("/auth/send-otp", { email });
+            toast.success("OTP sent to your email");
+            return true;
+        } catch (error) {
+            toast.error(error?.response?.data?.message || "Failed to send OTP");
+            return false;
+        }
+    },
+
+    sendUpdateOtp: async () => {
+        try {
+            await axiosInstance.post("/auth/send-update-otp");
+            toast.success("Verification OTP sent to your email");
+            return true;
+        } catch (error) {
+            toast.error(error?.response?.data?.message || "Failed to send OTP");
+            return false;
+        }
+    },
+
+    verifyOtp: async (email, otp) => {
+        set({ isVerifyingOtp: true });
+        try {
+            const res = await axiosInstance.post("/auth/verify-otp", { email, otp });
+            set({ authUser: res.data });
+            toast.success("OTP Verified! Logged in.");
+            get().connectSocket();
+        } catch (error) {
+            toast.error(error?.response?.data?.message || "Invalid OTP");
+        } finally {
+            set({ isVerifyingOtp: false });
         }
     },
 

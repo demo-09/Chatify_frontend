@@ -4,7 +4,61 @@ import daisyui from "daisyui";
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ["Plus Jakarta Sans", "system-ui", "sans-serif"],
+        display: ["Space Grotesk", "system-ui", "sans-serif"],
+      },
+      colors: {
+        accent: {
+          DEFAULT: "var(--c-accent)",
+          light: "var(--c-accent)",
+          dark: "var(--c-accent)",
+        },
+        accent2: "var(--c-accent-2)",
+        accent3: "var(--c-accent-3)",
+        surface: "var(--c-surface)",
+        card: "var(--c-card)",
+        main: "var(--c-text)",
+        muted: "var(--c-text-muted)",
+        appbg: "var(--c-bg)",
+      },
+      backgroundImage: {
+        "gradient-main": "linear-gradient(135deg, #7c6ff7 0%, #e879f9 100%)",
+        "gradient-subtle": "linear-gradient(135deg, rgba(124,111,247,0.15) 0%, rgba(232,121,249,0.15) 100%)",
+        "gradient-dark": "linear-gradient(135deg, #0d0e14 0%, #181920 100%)",
+      },
+      boxShadow: {
+        "glow": "0 0 30px rgba(124,111,247,0.25)",
+        "glow-strong": "0 0 50px rgba(124,111,247,0.4)",
+        "card": "0 4px 24px rgba(0,0,0,0.4)",
+        "card-hover": "0 8px 40px rgba(0,0,0,0.6)",
+      },
+      animation: {
+        "float": "floatAnim 3s ease-in-out infinite",
+        "pulse-glow": "pulseGlow 2s ease-in-out infinite",
+        "slide-up": "slideUp 0.3s ease forwards",
+        "fade-in": "fadeIn 0.25s ease forwards",
+      },
+      keyframes: {
+        floatAnim: {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-8px)" },
+        },
+        pulseGlow: {
+          "0%, 100%": { boxShadow: "0 0 10px rgba(124,111,247,0.3)" },
+          "50%": { boxShadow: "0 0 25px rgba(124,111,247,0.6)" },
+        },
+        slideUp: {
+          from: { opacity: 0, transform: "translateY(12px)" },
+          to: { opacity: 1, transform: "translateY(0)" },
+        },
+        fadeIn: {
+          from: { opacity: 0 },
+          to: { opacity: 1 },
+        },
+      },
+    },
   },
   plugins: [daisyui],
   daisyui: {
@@ -41,6 +95,22 @@ export default {
       "dim",
       "nord",
       "sunset",
+      {
+        chatify: {
+          "primary": "#7c6ff7",
+          "secondary": "#e879f9",
+          "accent": "#38bdf8",
+          "neutral": "#1e2030",
+          "base-100": "#0d0e14",
+          "base-200": "#13141c",
+          "base-300": "#181920",
+          "base-content": "#f1f1f5",
+          "info": "#38bdf8",
+          "success": "#22c55e",
+          "warning": "#f59e0b",
+          "error": "#ef4444",
+        },
+      },
     ],
   },
 };
