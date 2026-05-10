@@ -54,10 +54,13 @@ const StoriesPage = () => {
     };
   };
 
+  const safeStories = Array.isArray(stories) ? stories : [];
+
   const openStory = async (story) => {
+    if (!story) return;
     setActiveStory(story);
     setIsViewing(true);
-    if (!story.views.includes(authUser._id)) {
+    if (!story.views?.includes(authUser?._id)) {
       await viewStory(story._id);
     }
   };
@@ -106,7 +109,7 @@ const StoriesPage = () => {
             ))}
           </div>
         ) : (
-          stories.map(story => {
+          safeStories.map(story => {
             const hasSeen = story.views.includes(authUser._id);
             return (
               <div 
@@ -197,7 +200,7 @@ const StoriesPage = () => {
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
-            {stories.map(story => (
+            {safeStories.map(story => (
               <div key={`grid-${story._id}`} onClick={() => openStory(story)} className="aspect-[10/16] rounded-3xl overflow-hidden relative group cursor-pointer border border-app bg-surface shadow-lg hover:shadow-accent/10 transition-all duration-500">
                 <img src={story.mediaUrl} alt="Highlight" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity pointer-events-none" />

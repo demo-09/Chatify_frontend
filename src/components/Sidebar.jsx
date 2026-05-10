@@ -39,11 +39,14 @@ const Sidebar = () => {
     setSelectedMembers(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
   };
 
-  const filteredUsers = users
-    .filter((u) => showOnlineOnly ? onlineUsers.includes(u._id) : true)
-    .filter((u) => u.fullName.toLowerCase().includes(search.toLowerCase()));
+  const safeUsers = Array.isArray(users) ? users : [];
+  const safeGroups = Array.isArray(groups) ? groups : [];
 
-  const onlineCount = onlineUsers.filter((id) => users.some((u) => u._id === id)).length;
+  const filteredUsers = safeUsers
+    .filter((u) => showOnlineOnly ? onlineUsers.includes(u._id) : true)
+    .filter((u) => u?.fullName?.toLowerCase().includes(search.toLowerCase()));
+
+  const onlineCount = onlineUsers.filter((id) => safeUsers.some((u) => u._id === id)).length;
 
   if (isUsersLoading || isGroupsLoading) return <SidebarSkeleton />;
 
@@ -71,7 +74,7 @@ const Sidebar = () => {
               <div>
                 <label className="text-xs font-bold text-muted uppercase tracking-wider block mb-1.5 ml-1">Select Members ({selectedMembers.length})</label>
                 <div className="max-h-48 overflow-y-auto no-scrollbar border border-app rounded-xl bg-card p-2 grid grid-cols-1 gap-1">
-                  {users.filter(u => u.email !== "ai@chatify.com").map(user => (
+                  {safeUsers.filter(u => u?.email !== "ai@chatify.com").map(user => (
                     <div 
                       key={user._id} 
                       onClick={() => toggleMember(user._id)}
@@ -142,14 +145,14 @@ const Sidebar = () => {
           >
             <div onClick={() => setShowGroups(!showGroups)} className="flex items-center gap-2 cursor-pointer flex-1">
               <Users className="w-3.5 h-3.5" />
-              <span className="text-[11px] font-bold uppercase tracking-wider">Groups ({groups.length})</span>
+              <span className="text-[11px] font-bold uppercase tracking-wider">Groups ({safeGroups.length})</span>
             </div>
             <button onClick={() => setIsModalOpen(true)} className="p-1 rounded-md hover:bg-accent/20 hover:text-accent transition-all opacity-0 group-hover:opacity-100">
               <X className="w-3.5 h-3.5 rotate-45" />
             </button>
           </div>
           
-          {showGroups && groups.map((group) => {
+          {showGroups && safeGroups.map((group) => {
             const isSelected = selectedUser?._id === group._id;
             return (
               <button
@@ -229,7 +232,7 @@ const Sidebar = () => {
           );
         })}
 
-        {(filteredUsers.length === 0 && groups.length === 0) && (
+        {(filteredUsers.length === 0 && safeGroups.length === 0) && (
           <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
             <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center mb-3">
               <Search className="w-5 h-5 text-muted" />

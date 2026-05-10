@@ -51,8 +51,11 @@ const SnapsPage = () => {
     }
   };
 
-  const receivedSnaps = snaps.filter(s => s.receiver._id === authUser._id);
-  const sentSnaps = snaps.filter(s => s.sender._id === authUser._id);
+  const safeSnaps = Array.isArray(snaps) ? snaps : [];
+  const safeUsers = Array.isArray(users) ? users : [];
+
+  const receivedSnaps = safeSnaps.filter(s => s?.receiver?._id === authUser?._id);
+  const sentSnaps = safeSnaps.filter(s => s?.sender?._id === authUser?._id);
   
   const displaySnaps = activeTab === "received" ? receivedSnaps : sentSnaps;
 
@@ -149,7 +152,7 @@ const SnapsPage = () => {
               <button onClick={() => setShowUserModal(false)} className="text-muted hover:text-main"><X className="w-5 h-5" /></button>
             </div>
             <div className="max-h-80 overflow-y-auto p-2 no-scrollbar">
-              {users.map(user => (
+              {safeUsers.map(user => (
                 <div 
                   key={user._id} 
                   onClick={() => { setSelectedReceiver(user); setTimeout(() => fileRef.current?.click(), 100); }}

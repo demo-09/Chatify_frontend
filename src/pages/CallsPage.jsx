@@ -204,7 +204,10 @@ const CallsPage = () => {
     return `${m}:${s}`;
   };
 
-  const filteredUsers = users.filter(u => u.fullName.toLowerCase().includes(searchQuery.toLowerCase()));
+  const safeUsers = Array.isArray(users) ? users : [];
+  const safeCallHistory = Array.isArray(callHistory) ? callHistory : [];
+
+  const filteredUsers = safeUsers.filter(u => u?.fullName?.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
     <div className="h-full flex flex-col p-4 sm:p-6 lg:p-8 relative z-10 animate-fade-in">
@@ -265,9 +268,9 @@ const CallsPage = () => {
           <div className="space-y-2">
             {isLoading ? (
                <div className="flex justify-center p-8"><Loader2 className="w-6 h-6 animate-spin text-accent" /></div>
-            ) : callHistory.length === 0 ? (
+            ) : safeCallHistory.length === 0 ? (
                <div className="text-muted text-sm p-8 text-center">No recent calls.</div>
-            ) : callHistory.map((call) => {
+            ) : safeCallHistory.map((call) => {
               const isOutgoing = call.caller._id === authUser._id;
               const otherUser = isOutgoing ? call.receiver : call.caller;
               const iconClass = call.status === 'missed' ? 'bg-rose-500/10 text-rose-500' : 
