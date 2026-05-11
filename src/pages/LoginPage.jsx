@@ -55,6 +55,10 @@ const LoginPage = () => {
           <div className="mb-8">
             <h1 className="text-4xl font-display font-bold text-white mb-2 tracking-tight">Welcome back</h1>
             <p className="text-muted">Sign in to continue chatting</p>
+                       <p className="text-danger">
+  OTP generation is temporarily unavailable. Please log in with Google.
+</p>
+
           </div>
 
           {/* Form */}
