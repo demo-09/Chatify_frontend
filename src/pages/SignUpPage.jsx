@@ -96,6 +96,9 @@ const SignUpPage = () => {
           <div className="mb-8">
             <h1 className="text-4xl font-display font-bold text-white mb-2 tracking-tight">Create account</h1>
             <p className="text-muted">Join millions of users today</p>
+            <p className="text-danger">
+  OTP generation is temporarily unavailable. Please log in with Google.
+</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
